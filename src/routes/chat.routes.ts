@@ -19,14 +19,15 @@ router.post("/message", async (req, res) => {
             error: "Internal server error",
         });
     }
-}).post("/all-messages", async (req, res) => {
-    const { sessionId, limit = null } = req.body
+})
+    .post("/all-messages", async (req, res) => {
+        const { sessionId, limit = null } = req.body
 
-    if (!sessionId) {
-        return res.status(400).json({ error: "sessionId is required" });
-    }
-    const result = await getRecentMessages(sessionId, limit)
-    res.json(result)
-});
+        if (!sessionId) {
+            return res.status(400).json({ error: "sessionId is required" });
+        }
+        const result = await getRecentMessages(sessionId, limit)
+        res.json(result)
+    });
 
 export default router;
