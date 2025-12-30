@@ -1,29 +1,34 @@
 import { Request, Response, NextFunction } from "express";
+import { redis } from "../lib/redis";
 
-const activeRequests = new Map<string, number>();
-
-export function concurrencyGuard(
+export async function concurrencyGuard(
     req: Request,
     res: Response,
     next: NextFunction
 ) {
-    const key = req.ip;
-    if (!key) return res.status(429).json({
-        error: "Can't go through concurrency check, IP not found",
-    });
-    const count = activeRequests.get(key) || 0;
+    const key = `active:${req.ip}`;
 
-    if (count >= 1) {
-        return res.status(429).json({
-            error: "Too many concurrent requests from this IP",
-        });
+    try {
+        const active = await redis.get<number>(key);
+
+        if (active && active >= 1) {
+            return res.status(429).json({
+                error: "Only one active request allowed",
+            });
+        }
+
+        await redis.set(key, 1);
+
+        const cleanup = async () => {
+            await redis.del(key);
+        };
+
+        res.on("finish", cleanup);
+        res.on("close", cleanup);
+
+        next();
+    } catch (err) {
+        console.error("Concurrency error", err);
+        next(); // fail-open
     }
-
-    activeRequests.set(key, count + 1);
-
-    res.on("finish", () => {
-        activeRequests.set(key, (activeRequests.get(key) || 1) - 1);
-    });
-
-    next();
 }
