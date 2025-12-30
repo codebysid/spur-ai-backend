@@ -46,7 +46,7 @@ async function saveMessage(
     });
 }
 
-async function getRecentMessages(
+export async function getRecentMessages(
     conversationId: string,
     limit: number
 ): Promise<Message[]> {
