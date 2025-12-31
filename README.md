@@ -60,8 +60,8 @@ $ LLM_API_KEY=<from groq>
 $ LLM_BASE_URL=<from groq>
 $ LLM_MODEL=llama-3.3-70b-versatile
 
-$ UPSTASH_REDIS_REST_URL=<form upstash>
-$ UPSTASH_REDIS_REST_TOKEN=<form upstash>
+$ UPSTASH_REDIS_REST_URL=<from upstash>
+$ UPSTASH_REDIS_REST_TOKEN=<from upstash>
 ```
 
 #### Run dev Server:
@@ -162,6 +162,13 @@ This allows easy future enhancements such as:
 - Tool calling / function calling
 - Retrieval-Augmented Generation (RAG)
 - Multiple model fallback strategies
+
+## ⏲️ If i had more time?
+I would have built:
+- Authentication and Authorization 
+- Streaming
+- Websockets
+- Retrieval Augmented Generation and Embeddings
 
 ## 🏗 Architecture Overview
 
